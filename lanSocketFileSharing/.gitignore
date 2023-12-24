@@ -1,2 +1,4 @@
 **/__pycache__
-activate-venv.sh
+/.vscode
+/data
+/download

@@ -1,11 +1,9 @@
-import io
 import os
 import socket
 from pathlib import Path
 import configparser
 
-from modules.socket_token import SokenToken
-from modules.socket_header import SocketHeader
+from modules.socket_token import SocketToken
 
 conf = configparser.ConfigParser()
 conf.read(Path('conf.ini'))
@@ -29,23 +27,25 @@ class Client:
         self.sock.connect((host, port))
 
     def disconnect(self) -> None:
-        header = SocketHeader()
-        header.add('action', 'disconnect')
-        self.sock.sendall(add_size_header(header.as_bytes()))
-        self.sock.close()
+        self.send_all_bytes(SocketToken.DISCONNECT.value)
 
-    def sendall(self, data: bytes) -> None:
+    def send_all_bytes(self, data: bytes) -> None:
         self.sock.sendall(add_size_header(data))
 
-    def send_text(self, text: str) -> None:
+    def send_all_text(self, text: str) -> None:
         self.sock.sendall(add_size_header(text.encode(ENCODING)))
 
     def send_file(self, file_path: Path) -> None:
-        with io.open(file_path, 'rb') as file:
-            data = file.read(BUFFER_SIZE)
+        fsize = os.path.getsize(file_path)
+        fname = os.path.basename(file_path)
+
+        self.send_all_text(f"{fsize}\t{fname}")
+        
+        with open(file_path, 'rb') as file:
+            data = file.read(BUFFER_SIZE-HEADER_SIZE)
             while data:
-                self.sock.sendall(add_size_header(data))
-                data = file.read(BUFFER_SIZE)
+                self.send_all_bytes(data)
+                data = file.read(BUFFER_SIZE-HEADER_SIZE)
 
 
 def main():
@@ -53,22 +53,10 @@ def main():
     PORT = int(conf['SERVER']['PORT'])
 
     client = Client()
-
     client.connect(HOST, PORT)
 
-    fname = 'cat.webm'
-    fp = Path('data', fname)
-
-    header = SocketHeader()
-    header.add('action', 'download')
-    header.add('data-type', 'file')
-    header.add('file-name', fname)
-    header.add('file-size', os.path.getsize(fp))
-
-    client.sendall(header.as_bytes())
-
+    fp = Path('data', 'cat_meme.webm')
     client.send_file(fp)
-
     client.disconnect()
 
 
