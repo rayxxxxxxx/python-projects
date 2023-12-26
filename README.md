@@ -1,2 +1,1 @@
-# my-python-modules
-my modules for python
+# some-python-projects
