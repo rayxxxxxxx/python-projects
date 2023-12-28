@@ -1,7 +1,7 @@
 import socket
 
 from utils import ENCODING, HEADER_SIZE
-from utils.data_utils import add_header
+from utils.data_prepocessing import add_header
 
 
 def sendbytes(sock: socket.socket, data: bytes) -> None:
@@ -14,7 +14,7 @@ def sendstr(sock: socket.socket, data: str) -> None:
     sock.sendall(prepared)
 
 
-def recvbytes(sock: socket.socket) -> bytes | None:
+def recvbytes(sock: socket.socket) -> bytes:
     header = sock.recv(HEADER_SIZE)
 
     if header:
@@ -22,10 +22,10 @@ def recvbytes(sock: socket.socket) -> bytes | None:
         data = sock.recv(dsize)
         return data
 
-    return None
+    return b''
 
 
-def recvstr(sock: socket.socket) -> str | None:
+def recvstr(sock: socket.socket) -> str:
     header = sock.recv(HEADER_SIZE)
 
     if header:
@@ -33,4 +33,4 @@ def recvstr(sock: socket.socket) -> str | None:
         data = sock.recv(dsize).decode(ENCODING)
         return data
 
-    return None
+    return ''

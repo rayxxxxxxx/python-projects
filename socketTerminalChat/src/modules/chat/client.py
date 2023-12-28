@@ -2,7 +2,7 @@ from pathlib import Path
 import socket
 import configparser
 
-import utils.socket_utils as sockutil
+import src.utils.networking as sockutil
 from modules.data_token import DataToken
 
 conf = configparser.ConfigParser()

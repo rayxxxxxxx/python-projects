@@ -1,5 +1,7 @@
+import enum
+
 from modules import ENCODING
-from utils.data_utils import add_header
+from utils.data_prepocessing import add_header
 
 
 class Message:
@@ -13,9 +15,6 @@ class Message:
 
     def addstr(self, data: str) -> None:
         self.data.append(data.encode(ENCODING))
-
-    def addmeta(self, data: str) -> None:
-        self.data.insert(0, data.encode(ENCODING))
 
     def prepare(self) -> bytes:
         return add_header(b" ".join(self.data))
