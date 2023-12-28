@@ -1,7 +1,7 @@
 import socket
 
-from utils import ENCODING, HEADER_SIZE
-from utils.data_prepocessing import add_header
+from src import ENCODING, HEADER_SIZE
+from src.utils.data_prepocessing import add_header
 
 
 def sendbytes(sock: socket.socket, data: bytes) -> None:

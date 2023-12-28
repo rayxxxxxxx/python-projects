@@ -2,8 +2,8 @@ from __future__ import annotations
 import socket
 import selectors
 
-from modules import HOST, PORT, ENCODING, HEADER_SIZE, BUFFER_SIZE
-import utils.networking as network
+from src import ENCODING
+import src.utils.networking as network
 
 
 class ConnectionData:
@@ -18,7 +18,7 @@ class Server:
             socket.SOCK_STREAM
         )
 
-        self.clients: list[socket.socket] = list()
+        self.connections: list[socket.socket] = list()
         self.selector: selectors.DefaultSelector = selectors.DefaultSelector()
 
     def setup(self, addr: tuple, max_conn: int) -> None:
@@ -38,22 +38,22 @@ class Server:
         while True:
             try:
                 events = self.selector.select(timeout=None)
-                for key, mask in events:
-                    if not key.data:
-                        accept_connection(self, key)
+                for client, mask in events:
+                    if not client.data:
+                        accept_connection(self, client)
                     else:
-                        serve_connection(self, key, mask)
+                        serve_connection(self, client, mask)
             except KeyboardInterrupt:
                 print(':::: KEYBOARD INTERRUPT ::::')
                 self.shutdown()
                 break
 
     def shutdown(self):
-        for sock in self.clients:
+        for sock in self.connections:
             self.selector.unregister(sock)
             sock.close()
 
-        self.clients.clear()
+        self.connections.clear()
         self.selector.close()
         self.sock.close()
 
@@ -62,7 +62,7 @@ def accept_connection(server: Server, client: selectors.SelectorKey):
     conn, addr = client.fileobj.accept()
     conn.setblocking(False)
 
-    server.clients.append(conn)
+    server.connections.append(conn)
     server.selector.register(
         conn,
         selectors.EVENT_READ | selectors.EVENT_WRITE,
@@ -72,10 +72,10 @@ def accept_connection(server: Server, client: selectors.SelectorKey):
     print(f"{conn.getpeername()} has connected...")
 
 
-def remove_connection(server: Server, client: socket.socket):
-    server.selector.unregister(client)
-    client.close()
-    server.clients.remove(client)
+def remove_connection(server: Server, conn: socket.socket):
+    server.selector.unregister(conn)
+    conn.close()
+    server.connections.remove(conn)
 
 
 def serve_connection(server: Server, client: selectors.SelectorKey, mask):
@@ -106,16 +106,6 @@ def handle_write_event(server: Server, client: selectors.SelectorKey):
 
     if conndata.messages:
         msg = conndata.messages.pop(0)
-        for other_conn in server.clients:
+        for other_conn in server.connections:
             if other_conn != conn:
                 network.sendbytes(other_conn, msg)
-
-
-def main():
-    server = Server()
-    server.setup((HOST, PORT), 10)
-    server.mainloop()
-
-
-if __name__ == '__main__':
-    main()
