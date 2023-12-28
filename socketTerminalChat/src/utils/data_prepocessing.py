@@ -8,7 +8,7 @@ def add_header(data: bytes) -> bytes:
     return header.encode(ENCODING)+data
 
 
-def extract_data(data: bytes) -> bytes:
+def remove_header(data: bytes) -> bytes:
     ...
 
 

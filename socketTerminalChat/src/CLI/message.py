@@ -1,7 +1,5 @@
-import enum
-
-from modules import ENCODING
-from utils.data_prepocessing import add_header
+from src import ENCODING
+from src.utils.data_prepocessing import add_header
 
 
 class Message:

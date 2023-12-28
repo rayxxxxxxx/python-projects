@@ -32,7 +32,7 @@ class Server:
             data=None
         )
 
-        print(f"[SERVER] ready...")
+        print(f"[SERVER] {self.sock.getsockname()} is ready...")
 
     def mainloop(self):
         while True:
@@ -80,13 +80,13 @@ def remove_connection(server: Server, conn: socket.socket):
 
 def serve_connection(server: Server, client: selectors.SelectorKey, mask):
     if mask & selectors.EVENT_READ:
-        handle_read_event(server, client)
+        serve_read_event(server, client)
 
     if mask & selectors.EVENT_WRITE:
-        handle_write_event(server, client)
+        serve_write_event(server, client)
 
 
-def handle_read_event(server: Server, client: selectors.SelectorKey):
+def serve_read_event(server: Server, client: selectors.SelectorKey):
     conn: socket.socket = client.fileobj
     conndata: conndata = client.data
 
@@ -100,7 +100,7 @@ def handle_read_event(server: Server, client: selectors.SelectorKey):
         print(f"{conn.getpeername()} {data.decode(ENCODING)}")
 
 
-def handle_write_event(server: Server, client: selectors.SelectorKey):
+def serve_write_event(server: Server, client: selectors.SelectorKey):
     conn: socket.socket = client.fileobj
     conndata: conndata = client.data
 

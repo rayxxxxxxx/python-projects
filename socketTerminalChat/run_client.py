@@ -6,7 +6,7 @@ from src.client import Client
 
 def main():
     conf = configparser.ConfigParser()
-    conf.read(Path('config.conf'))
+    conf.read(Path('config.ini'))
 
     SERVER_HOST = conf.get('SERVER', 'HOST')
     SERVER_PORT = int(conf.get('SERVER', 'PORT'))

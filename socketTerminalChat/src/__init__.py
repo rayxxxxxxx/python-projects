@@ -2,7 +2,7 @@ from pathlib import Path
 import configparser
 
 conf = configparser.ConfigParser()
-conf.read(Path('config.conf'))
+conf.read(Path('config.ini'))
 
 ENCODING = conf.get('SYSTEM', 'ENCODING')
 HEADER_SIZE = int(conf.get('SYSTEM', 'HEADER_SIZE'))
