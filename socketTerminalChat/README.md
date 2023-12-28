@@ -4,21 +4,11 @@ You can modify parameters in [config](./config.conf).
 
 ## How to run
 
-- set your LAN IP address as parameter `HOST` in [config](./config.conf) if you want your machine to be visible to other machines
-
-> [SERVER]  
-> HOST=localhost <--- "your local IP here, or leave localhost"  
-
-- manually set `SERVER_HOST` and `SERVER_PORT` in `main` function of file [client.py](./src/client.py) in order to connect to other machine (constants in [config](./config.conf) used to serve your machine as server)
-
-> SERVER_HOST = "ip_address_of_other_machine"  
-> SERVER_PORT = port_number  
-
 Start server:
-> bash run-server.sh
+> python3 run_server.py <host> <port>
 
 Run client script:
-> bash run-client.sh
+> python3 run_client.py <server-host> <server-port>
 
 ## *Notice
 
