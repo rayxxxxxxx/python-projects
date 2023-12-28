@@ -1,21 +1,33 @@
-from pathlib import Path
-import configparser
+import argparse
 
 from src.client import Client
 
 
 def main():
-    conf = configparser.ConfigParser()
-    conf.read(Path('config.ini'))
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('host', type=str, help='server host')
+    argparser.add_argument('port', type=str, help='server port')
 
-    SERVER_HOST = conf.get('SERVER', 'HOST')
-    SERVER_PORT = int(conf.get('SERVER', 'PORT'))
+    args = argparser.parse_args()
+
+    SERVER_HOST = args.host
+    SERVER_PORT = int(args.port)
 
     client = Client()
     client.connect((SERVER_HOST, SERVER_PORT))
 
-    client.sendbytes(b"123 qwe")
-    client.sendbytes(b"\r\0")
+    while True:
+        try:
+            inmsg = client.recvbytes().decode('utf-8')
+            while inmsg:
+                print(inmsg)
+                inmsg = client.recvbytes().decode('utf-8')
+
+            outmsg = input('> ')
+            if outmsg:
+                client.sendbytes(outmsg.encode('utf-8'))
+        except KeyboardInterrupt:
+            break
 
 
 if __name__ == '__main__':
