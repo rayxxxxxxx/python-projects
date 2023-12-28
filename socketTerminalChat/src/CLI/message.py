@@ -1,5 +1,4 @@
 from src import ENCODING
-from src.utils.data_prepocessing import add_header
 
 
 class Message:
@@ -15,4 +14,4 @@ class Message:
         self.data.append(data.encode(ENCODING))
 
     def prepare(self) -> bytes:
-        return add_header(b" ".join(self.data))
+        return (' '.join(self.data)).encode(ENCODING)

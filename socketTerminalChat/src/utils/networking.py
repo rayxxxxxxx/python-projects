@@ -1,16 +1,16 @@
 import socket
 
 from src import ENCODING, HEADER_SIZE
-from src.utils.data_prepocessing import add_header
+import src.utils.data_prepocessing as preporcessing
 
 
 def sendbytes(sock: socket.socket, data: bytes) -> None:
-    prepared = add_header(data)
+    prepared = preporcessing.add_header(data)
     sock.sendall(prepared)
 
 
 def sendstr(sock: socket.socket, data: str) -> None:
-    prepared = add_header(data.encode(ENCODING))
+    prepared = preporcessing.add_header(data.encode(ENCODING))
     sock.sendall(prepared)
 
 

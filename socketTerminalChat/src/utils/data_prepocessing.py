@@ -8,9 +8,5 @@ def add_header(data: bytes) -> bytes:
     return header.encode(ENCODING)+data
 
 
-def remove_header(data: bytes) -> bytes:
-    ...
-
-
 def chunkify(data: bytes) -> list[bytes]:
     ...

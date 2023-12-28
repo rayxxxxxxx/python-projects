@@ -14,6 +14,7 @@ def main():
     client = Client()
     client.connect((SERVER_HOST, SERVER_PORT))
 
+    client.sendbytes(b"123 qwe")
     client.sendbytes(b"\r\0")
 
 

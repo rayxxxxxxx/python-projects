@@ -1,15 +1,17 @@
-from pathlib import Path
-import configparser
+import argparse
 
 from src.server import Server
 
 
 def main():
-    conf = configparser.ConfigParser()
-    conf.read(Path('config.ini'))
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('host', type=str, help='server host')
+    argparser.add_argument('port', type=str, help='server port')
 
-    HOST = conf.get('SERVER', 'HOST')
-    PORT = int(conf.get('SERVER', 'PORT'))
+    args = argparser.parse_args()
+
+    HOST = args.host
+    PORT = int(args.port)
 
     server = Server()
     server.setup((HOST, PORT), 10)
