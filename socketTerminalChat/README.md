@@ -5,10 +5,10 @@ You can modify parameters in [config](./config.conf).
 ## How to run
 
 Start server:
-> python3 run_server.py <host> <port>
+> python3 run_server.py \<host\> \<port\>
 
 Run client script:
-> python3 run_client.py <server-host> <server-port>
+> python3 run_client.py \<server-host\> \<server-port\>
 
 ## *Notice
 
